@@ -39,7 +39,7 @@ py -m pip install transformers datasets peft accelerate bitsandbytes trl
 ```
 
 ## 📂 Archivos
-Este repositorio incluye los archivos del modelo LLM entrenado, su script de entrenamiento y el dataset para entrenar.
+Este repositorio incluye los archivos del modelo LLM entrenado (solo en [HuggingFace](https://huggingface.co/Komma-LuisMiSanVe/LangToSQL) ya que el modelo es demasiado grande para Git LFS), su script de entrenamiento y el dataset para entrenar.
 
 Puedes descargar el `GGUF` final desde los [Lanzamientos](https://github.com/LuisMiSanVe/LangToSQL_LLM/releases).
 
