@@ -4,51 +4,34 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments
 from peft import LoraConfig, PeftModel
 from trl import SFTTrainer
 
-model_name = "deepseek-ai/deepseek-coder-1.3b-base"
+model_name = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 tokenizer.pad_token = tokenizer.eos_token
 
 model = AutoModelForCausalLM.from_pretrained(
     model_name,
     torch_dtype=torch.float32,
-    device_map={"": "cpu"} # Sets CPU for training, you can change it to use the GPU instead
+    device_map="auto"
 )
+
+model.config.pad_token_id = tokenizer.eos_token_id
 
 dataset = load_dataset("json", data_files="train.json", split="train")
 
-def format_example(example):
+def format_example(x):
+    messages = [
+        {"role": "user", "content": f"Write SQL query for: {x['question']}"},
+        {"role": "assistant", "content": x["query"]}
+    ]
     return {
-        "instruction": example["question"],
-        "input": "",
-        "output": example["query"]
+        "text": tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=False
+        )
     }
 
 dataset = dataset.map(format_example)
-
-def tokenize(example):
-    prompt_ids = tokenizer(
-        example["instruction"],
-        padding="max_length",
-        truncation=True,
-        max_length=512
-    ).input_ids
-
-    label_ids = tokenizer(
-        example["output"],
-        padding="max_length",
-        truncation=True,
-        max_length=512
-    ).input_ids
-
-    attention_mask = [1 if id != tokenizer.pad_token_id else 0 for id in prompt_ids]
-
-    return {
-        "input_ids": prompt_ids,
-        "attention_mask": attention_mask,
-        "labels": label_ids
-    }
-
-dataset = dataset.map(tokenize, batched=False)
 
 peft_config = LoraConfig(
     r=16,
@@ -64,10 +47,10 @@ training_args = TrainingArguments(
     per_device_train_batch_size=1,
     gradient_accumulation_steps=4,
     learning_rate=2e-4,
-    num_train_epochs=1, # More epochs -> better accuracy but longer training
+    num_train_epochs=5,
     logging_steps=10,
     save_strategy="epoch",
-    fp16=False
+    fp16=torch.cuda.is_available()
 )
 
 trainer = SFTTrainer(
@@ -85,8 +68,9 @@ tokenizer.save_pretrained("./sql-model")
 base_model = AutoModelForCausalLM.from_pretrained(
     model_name,
     torch_dtype=torch.float32,
-    device_map={"": "cpu"}
+    device_map="auto"
 )
-model_merged = PeftModel.from_pretrained(base_model, "./sql-model")
-model_merged = model_merged.merge_and_unload()
-model_merged.save_pretrained("./sql-model-merged")
+model = PeftModel.from_pretrained(base_model, "./sql-model")
+model = model.merge_and_unload()
+model.save_pretrained("./sql-model-merged", safe_serialization=True)
+tokenizer.save_pretrained("./sql-model-merged")

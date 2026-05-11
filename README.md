@@ -22,24 +22,27 @@
 The AI model has been trained for turning natural language to PostgreSQL queries.
 
 ## 📝 Technology Explanation
-This model uses [DeepSeek Coder](https://huggingface.co/deepseek-ai/deepseek-coder-1.3b-base) as a base and then is fine tuned with [Spider](https://yale-lily.github.io/spider) datasets.
+This model uses [Gwen Coder](https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct) as a base and then is fine tuned with [Spider](https://yale-lily.github.io/spider) datasets.
 
 The `JSON` dataset file contains **Spider**'s `train_spider.json` as is the main dataset.
 
-The model can be exported to `GGUF` with [llama.cpp](https://github.com/ggml-org/llama.cpp) so it can be used by programs like [LM Studio](https://lmstudio.ai/).
+The model is exported to `GGUF` with [llama.cpp](https://github.com/ggml-org/llama.cpp) so it can be used by programs like [LM Studio](https://lmstudio.ai/).
 
 ## 🛠️ Setup
 In order to execute the training script for your own, you first need to install [Python](https://www.python.org/) and run this command:
 ```
-pip install transformers datasets peft accelerate bitsandbytes trl
+pip install transformers datasets peft accelerate bitsandbytes trl==1.0.0
 ```
 Depending on the version, you may have to use this instead:
 ```
-py -m pip install transformers datasets peft accelerate bitsandbytes trl
+py -m pip install transformers datasets peft accelerate bitsandbytes trl==1.0.0
 ```
 
+>[!IMPORTANT]
+>Make sure the `TRL` library version is `1.0.0`, as is the only version supported by the trainer script.
+
 ## 📂 Files
-This repository includes the trained LLM model's files (only in [HuggingFace](https://huggingface.co/Komma-LuisMiSanVe/LangToSQL) as the model is too big for Git LFS), its training script and the training dataset.
+This repository includes the trained LLM model's files (only in [HuggingFace](https://huggingface.co/Komma-LuisMiSanVe/LangToSQL) as the model is too big for Git LFS), its training script, the training dataset and a tester script to test the `.safetensors` model.
 
 You can download the final `GGUF` in the [Releases](https://github.com/LuisMiSanVe/LangToSQL_LLM/releases).
 
@@ -60,9 +63,9 @@ The version number will follow this format: \
   - [peft](https://pypi.org/project/peft/)
   - [acceletare](https://pypi.org/project/accelerate/)
   - [bitsandbytes](https://pypi.org/project/bitsandbytes/)
-  - [trl](https://pypi.org/project/trl/)
+  - [trl](https://pypi.org/project/trl/) (1.0.0)
 - Other: 
   - [llama.cpp](https://github.com/ggml-org/llama.cpp)
-  - [DeepSeek Coder](https://huggingface.co/deepseek-ai/deepseek-coder-1.3b-base)
+  - [Gwen Coder](https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct)
   - [Spider](https://yale-lily.github.io/spider)
 - Recommended IDE: [VS Code](https://code.visualstudio.com/)
