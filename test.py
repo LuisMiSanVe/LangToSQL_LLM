@@ -1,7 +1,7 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-MODEL_PATH = "./sql-model-clean"  
+MODEL_PATH = "./sql-model-merged"  
 
 PROMPT = """\
 Write a select query of the invoice table.

@@ -47,7 +47,7 @@ training_args = TrainingArguments(
     per_device_train_batch_size=1,
     gradient_accumulation_steps=4,
     learning_rate=2e-4,
-    num_train_epochs=1, # More epochs -> better accuracy but longer training
+    num_train_epochs=5,
     logging_steps=10,
     save_strategy="epoch",
     fp16=torch.cuda.is_available()
@@ -72,5 +72,5 @@ base_model = AutoModelForCausalLM.from_pretrained(
 )
 model = PeftModel.from_pretrained(base_model, "./sql-model")
 model = model.merge_and_unload()
-model.save_pretrained("./sql-model-clean", safe_serialization=True)
-tokenizer.save_pretrained("./sql-model-clean")
+model.save_pretrained("./sql-model-merged", safe_serialization=True)
+tokenizer.save_pretrained("./sql-model-merged")

@@ -22,24 +22,27 @@
 El modelo de IA ha sido entrenado para convertir lenguaje natural a sentencias de PostgreSQL.
 
 ## 📝 Explicación de Tecnología
-El modelo usa [DeepSeek Coder](https://huggingface.co/deepseek-ai/deepseek-coder-1.3b-base) de base y refinado con los datasets de [Spider](https://yale-lily.github.io/spider).
+El modelo usa [Gwen Coder](https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct) de base y refinado con los datasets de [Spider](https://yale-lily.github.io/spider).
 
 El dataset en archivo `JSON` contiene `train_spider.json` de **Spider**, ya que es el dataset principal.
 
-El modelo se puede exportar a `GGUF` con [llama.cpp](https://github.com/ggml-org/llama.cpp) para que puedas usarlo en programas como [LM Studio](https://lmstudio.ai/).
+El modelo se ha exportado a `GGUF` con [llama.cpp](https://github.com/ggml-org/llama.cpp) para que puedas usarlo en programas como [LM Studio](https://lmstudio.ai/).
 
 ## 🛠️ Instalación
 Para ejecutar el script de entrenamiento por tu cuenta, primero necesitas instalar [Python](https://www.python.org/) y ejecuta este comando:
 ```
-pip install transformers datasets peft accelerate bitsandbytes trl
+pip install transformers datasets peft accelerate bitsandbytes trl==1.0.0
 ```
 Dependiendo en la versión, es posible que necesites usar este en su lugar:
 ```
-py -m pip install transformers datasets peft accelerate bitsandbytes trl
+py -m pip install transformers datasets peft accelerate bitsandbytes trl==1.0.0
 ```
 
+>[!IMPORTANT]
+>Asegurate que la libreria `TRL` está en la versión `1.0.0`, ya que es la única version compatible con el script de entrenamiento.
+
 ## 📂 Archivos
-Este repositorio incluye los archivos del modelo LLM entrenado (solo en [HuggingFace](https://huggingface.co/Komma-LuisMiSanVe/LangToSQL) ya que el modelo es demasiado grande para Git LFS), su script de entrenamiento y el dataset para entrenar.
+Este repositorio incluye los archivos del modelo LLM entrenado (solo en [HuggingFace](https://huggingface.co/Komma-LuisMiSanVe/LangToSQL) ya que el modelo es demasiado grande para Git LFS), su script de entrenamiento, el dataset para entrenar y un script para probar el modelo `.safetensors`.
 
 Puedes descargar el `GGUF` final desde los [Lanzamientos](https://github.com/LuisMiSanVe/LangToSQL_LLM/releases).
 
@@ -63,6 +66,6 @@ El número de la versión seguirá este formato: \
   - [trl](https://pypi.org/project/trl/)
 - Otros:
   - [llama.cpp](https://lmstudio.ai/)
-  - [DeepSeek Coder](https://huggingface.co/deepseek-ai/deepseek-coder-1.3b-base)
+  - [Gwen Coder](https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct)
   - [Spider](https://yale-lily.github.io/spider)
 - IDE Recomendado: [VS Code](https://code.visualstudio.com/)
